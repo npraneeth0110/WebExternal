@@ -29,7 +29,7 @@
                 if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
                   alert("invalid mail format");
                   return;}
-                const userdetail = Username:${username}\nEmail:${email};
+                const userdetail = Username:`${username}\nEmail:${email}`;
                 alert(userdetail);
             }
         </script>
