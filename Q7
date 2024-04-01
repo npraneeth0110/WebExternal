@@ -1,0 +1,65 @@
+7a:
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>unregister</title>
+    </head>
+    <body>
+        <form id="register form" onsubmit="validateform(event)">
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+
+            </div>
+            <input type="submit" value="Submit">
+
+        </form>
+        <script>
+            function validateform(event)
+            {
+                event.preventDefault();
+                const email = document.getElementById('email').value;
+                if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+                {
+                    alert("invalid EmailFormat");
+                    return;
+                }
+                const userdetail = Email:${email};
+                alert(userdetail); 
+            }
+        </script>
+
+    </body>
+</html>
+
+7b:
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
+import java.util.*;
+import java.io.*;
+import java.sql.*;
+
+@WebServlet("/unregister")
+public class Seven extends HttpServlet {
+  public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    PrintWriter out = null;
+    try {
+      res.setContentType("text/html");
+      out = res.getWriter();
+      DBConnection.loadDriver();
+      Connection con = DBConnection.getConnection();
+
+      String email = (String)req.getParameter("email");
+      PreparedStatement ps = con.prepareStatement("DELETE FROM lab_students WHERE emailid=?");
+      ps.setString(1, email);
+
+      int n = ps.executeUpdate();
+      if(n >= 0) {
+        out.println("Successfully Unregistered: " + email);
+      }
+    } catch(Exception e) {
+      out.println("Exception: " + e.getMessage());
+    }
+  }
+}
