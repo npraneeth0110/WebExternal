@@ -1,0 +1,76 @@
+5a:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Form</title>
+</head>
+<body>
+  <h2>Login Form</h2>
+  <form id="loginForm" onsubmit="return validateForm()">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+      <button type="submit">Login</button>
+    </div>
+  </form>
+  <script>
+    function validateForm() {
+      var username = document.getElementById('username').value;
+      var password = document.getElementById('password').value;
+
+      // Check if username and password fields are empty
+      if (username.trim() === '' || password.trim() === '') {
+        alert('Username and password cannot be empty');
+        return false;
+      }
+
+      // Additional validation can be added here, such as checking for minimum length of the password, etc.
+
+      return true;
+    }
+  </script>
+</body>
+</html>
+
+5b:
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
+import java.io.*;
+import java.sql.*;
+import java.util.*;
+
+@WebServlet("/login")
+public class Five extends HttpServlet {
+  public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    PrintWriter out = null;
+    try {
+      res.setContentType("text/html");
+      out = res.getWriter();
+      String uname = (String)req.getParameter("uname");
+      String psswd = (String)req.getParameter("psswd");
+
+      DBConnection.loadDriver();
+      Connection con = DBConnection.getConnection();
+      PreparedStatement ps = con.prepareStatement("SELECT * FROM lab_students WHERE uname=? AND passwd=?");
+      ps.setString(1, uname);
+      ps.setString(2, psswd);
+      ResultSet rs = ps.executeQuery();
+      if(!rs.next()) {
+        out.println("No valid user is found with the given credentials!! please login again");
+      } else {
+        out.println("Hi " + uname + " you have Successfully logged in");
+      }
+    } catch(Exception e) {
+      out.println("Exception: " + e);
+    }
+  }
+}
