@@ -14,7 +14,7 @@
                 let hours = today.getHours();
                 let minutes = today.getMinutes();
                 let seconds = today.getSeconds();
-                clock.textContent=${hours}:${minutes}:${seconds}
+                clock.textContent=`${hours}:${minutes}:${seconds}`
                 setTimeout(updateTime,1000);
             }
             updateTime();
