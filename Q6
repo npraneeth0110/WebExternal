@@ -1,0 +1,75 @@
+6a:
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>registerform</title>
+    </head>
+    <body>
+        <form id="registration form" onsubmit="validateform(event)">
+            <div>
+                <label for="username">username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <input type="submit" value="Submit">
+        </form>
+        <script>
+            function validateform(event)
+            {
+                event.preventDefault();
+                const username=document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                if(username.length<6){
+                 alert("username must be 6 characters long");
+                 return;
+                }
+                if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+                  alert("invalid mail format");
+                  return;}
+                const userdetail = Username:${username}\nEmail:${email};
+                alert(userdetail);
+            }
+        </script>
+    </body>
+</html>
+
+6b:
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
+import java.util.*;
+import java.io.*;
+import java.sql.*;
+
+@WebServlet("/insert")
+public class Six extends HttpServlet {
+  public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    PrintWriter out = null;
+    try {
+      res.setContentType("text/html");
+      out = res.getWriter();
+      String uname = req.getParameter("uname");
+      String passwd = req.getParameter("passwd");
+      String phno = req.getParameter("phno");
+      String emailid = req.getParameter("email");
+      DBConnection.loadDriver();
+      out.println("Driver Loaded...");
+      Connection con = DBConnection.getConnection();
+      out.println("Connected to database");
+      PreparedStatement ps = con.prepareStatement("INSERT INTO lab_students VALUES(?,?,?,?)");
+      ps.setString(1, uname);
+      ps.setString(2, passwd);
+      ps.setString(3, phno);
+      ps.setString(4, emailid);
+      int n = ps.executeUpdate();
+      if (n > 0) {
+        out.println("1 row inserted");
+      }
+    } catch(Exception e) {
+      out.println("error: " + e.getMessage());
+    }
+  }
+}
