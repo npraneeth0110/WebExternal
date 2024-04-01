@@ -1,0 +1,80 @@
+8a:
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>hobbies</title>
+    </head>
+    <body>
+        <form id="register form" onsubmit="validateform(event)">
+            <div>
+                <label>Gender</label>
+                <input type="radio" name="gender" id="male" value="male">
+                <label for="male">Male</label>
+                <input type="radio" name="gender" id="female" value="female">
+                <label for="female">Female</label>
+            </div>
+            <div>
+                <label for="hobbies">Hobbies</label>
+                <select id="hobbies" name="hobbies" >
+                    <option value="">Select a hobby</option>
+                    <option value="cricket">cricket</option>
+                    <option value="chess">chess</option>
+                    <option value="football">football</option>
+                </select>
+            </div>
+            <input type="submit" value="Submit">
+        </form>
+        <script>
+            function validateform(event)
+            {
+                const male = document.getElementById('male');
+                const female = document.getElementById('female');
+                if(!male.checked||female.checked)
+                {
+                    alert("select the gender");
+                    return false;
+                }
+                const hobbies = document.getElementById('hobbies').value;
+                if(hobbies==="")
+                {
+                    alert("please Select hobbies");
+                    return;
+                }
+                alert("submitted successfully");
+            }
+        </script>
+    </body>
+</html>
+
+8b:
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
+import java.sql.*;
+import java.io.*;
+
+@WebServlet("/hobby")
+public class HobbyServlet extends HttpServlet {
+  public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    res.setContentType("text/html");
+    PrintWriter out = res.getWriter();
+    try {
+      String gender = (String)req.getParameter("gender");
+      String hobby = (String)req.getParameter("hobby");
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/students", "root", "Lakshmi@123");
+
+      PreparedStatement ps = con.prepareStatement("INSERT INTO details VALUES(?,?)");
+      ps.setString(1, gender);
+      ps.setString(2, hobby);
+      int n = ps.executeUpdate();
+      if (n >= 0) {
+        out.println("Success");
+      } else {
+        out.println("Unsuccessful");
+      }
+    } catch (Exception e) {
+      out.println("Exception: " + e);
+    }
+  }
+}
